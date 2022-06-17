@@ -46,6 +46,44 @@ function GameConnection::NickNames_UpdateName(%client)
 	}
 }
 
+//overwrite to allow this function to still work
+function FindClientByName(%partialName)
+{
+	%pnLen = strlen (%partialName);
+	%clientIndex = 0;
+	%bestCL = -1;
+	%bestPos = 9999;
+	%clientIndex = 0;
+	while (%clientIndex < ClientGroup.getCount ())
+	{
+		%cl = ClientGroup.getObject (%clientIndex);
+		%pos = -1;
+		%name = strlwr (%cl.name);
+		%pos = strstr (%name, strlwr (%partialName));
+		if (%pos != -1)
+		{
+			%bestCL = %cl;
+			if (%pos == 0)
+			{
+				return %cl;
+			}
+			if (%pos < %bestPos)
+			{
+				%bestPos = %pos;
+				%bestCL = %cl;
+			}
+		}
+		%clientIndex += 1;
+	}
+	if (%bestCL != -1)
+	{
+		return %bestCL;
+	}
+	else 
+	{
+		return 0;
+	}
+}
 
 package NicknamePackage
 {
